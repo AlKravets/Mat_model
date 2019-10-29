@@ -14,7 +14,7 @@ T = 1
 # границы области пространства [ось][мин/макс значение]
 scope = np.zeros((N,2))
 for i in range(N):
-    scope[0] = [0,1]
+    scope[i] = [0,1]
 
 # исследуемая функция где s = [x, t], x = array[N эл]
 def y(s: np.ndarray)-> float:
@@ -64,7 +64,7 @@ for i in range(R_g):
 
 # заполняем массив Y_g
 for i in range(R_g):
-    Y_0[i] = y(s_g[i])
+    Y_g[i] = y(s_g[i])
 
 
 # моделирующая функция u
@@ -142,8 +142,17 @@ fig1.savefig('1_1.png')
 # вектор из u_0, u_g
 u_ = np.zeros(M_0+M_g)
 
-Y_0_1 = np.array([Y_0[i]- U(s_0[i]) for i in range(R_0)])
-Y_g_1 = np.array([Y_g[i]- U(s_g[i]) for i in range(R_g)])
+# можелирущая функция s = [x,t] u_k, s_k  это соответсвенно u, s_m; u_0, s_m_0; u_g, s_m_g
+def y_model(s, u_k, s_k):
+    res=0
+    for i in range(u_k.shape[0]):
+        res+= G(s - s_k[i])*u_k[i]
+    return res
+
+
+
+Y_0_1 = np.array([Y_0[i]- y_model(s_0[i], u, s_m) for i in range(R_0)])
+Y_g_1 = np.array([Y_g[i]- y_model(s_g[i], u, s_m) for i in range(R_g)])
 Y_ = np.append(Y_0_1,Y_g_1)
 
 A_11 = np.zeros((R_0, M_0))
@@ -191,12 +200,7 @@ u_0 = u_[:M_0]
 u_g = u_[M_0:]
 
 
-# можелирущая функция s = [x,t] u_k, s_k  это соответсвенно u, s_m; u_0, s_m_0; u_g, s_m_g
-def y_model(s, u_k, s_k):
-    res=0
-    for i in range(u_k.shape[0]):
-        res+= G(s - s_k[i])*u_k[i]
-    return res
+
 
 print(u_0)
 

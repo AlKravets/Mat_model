@@ -51,7 +51,7 @@ def create_slar():
     Y_0_new = np.array([cn.Y_0[i] - y_model(cn.s_0[i], cn.u, cn.s_m) for i in range(cn.R_0)])
     Y_g_new = np.array([cn.Y_g[i] - y_model(cn.s_g[i], cn.u, cn.s_m) for i in range(cn.R_g)])
 
-    Y_ = np.append(Y_0_new, Y_g_new)
+    Y_ = np.append(Y_0_new, Y_g_new, axis =0)
 
     A_11 = np.zeros((cn.R_0, cn.M_0))
     for i in range(cn.R_0):
@@ -93,12 +93,22 @@ def show_res():
     fig2 = pylab.figure()
     axes = Axes3D(fig2)
 
-    xx= np.arange (0, 1, 0.1)
-    tt = np.arange (0, 1, 0.1)
+    xx = np.zeros(100)
+    tt = np.zeros(100)
+    for i in range(100):
+        xx[i]= i/100
+        
+
+    
+
+    # xx= np.arange (0, 1, 0.1)
+    # tt = np.arange (0, 1, 0.1)
     yy = np.zeros((xx.shape[0], tt.shape[0]))
     for i in range(xx.shape[0]):
         for j in range(tt.shape[0]):
             yy[i][j] = y_res([xx[i],tt[j]], u_)
+    
+            print(yy[i,j], '  ', fn.y([xx[i],tt[j]]))
 
     axes.plot_surface(xx,tt,yy, label = "y(s)")
     axes.set_xlabel("x")                              # подпись у горизонтальной оси х
@@ -111,7 +121,7 @@ def show_res():
 
 if __name__ == '__main__':
     cn.test_observations()
-    print(cn.s_0)
+    #print(cn.s_0)
     show_constant()
     show_test_y()
     u_ = create_slar()

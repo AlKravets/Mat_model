@@ -16,11 +16,13 @@ def y(s: np.ndarray)-> float:
     #for i in range(s.shape[0]):
     for i in range(2):
         res+= (s[i] -0.5)**2
+    #res = s[1]**2 + s[0]**3
     return res
 
 
 def U(s):
     return 2*(s[1]-0.5)- 2*math.e**2
+    # return 2*s[1] - 6*math.e**2*s[0]
 
 
 if __name__ == '__main__':

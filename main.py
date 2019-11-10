@@ -22,15 +22,17 @@ def show_constant():
 
 def show_test_y():
     x = np.arange (0, 1, 0.1)
-    y = np.arange (0, 1, 0.1)
-    xgrid, ygrid = np.meshgrid(x, y)
-
-    zgrid = (xgrid - 0.5)**2 + (ygrid - 0.5)**2
+    t = np.arange (0, 1, 0.1)
+    xx, tt = np.meshgrid(x, t)
+    y = np.zeros((xx.shape[0], xx.shape[1]))
+    for i in range(xx.shape[0]):
+        for j in range(xx.shape[1]):
+            y[i][j] = fn.y([xx[i][j],tt[i][j]])
 
     fig1 = pylab.figure()
     axes = Axes3D(fig1)
 
-    axes.plot_surface(xgrid,ygrid,zgrid)
+    axes.plot_surface(xx,tt,y)
     axes.set_xlabel("x")                              # подпись у горизонтальной оси х
     axes.set_ylabel("t")
     axes.set_zlabel("y")
@@ -101,14 +103,28 @@ def show_res():
 
     
 
-    # xx= np.arange (0, 1, 0.1)
-    # tt = np.arange (0, 1, 0.1)
-    yy = np.zeros((xx.shape[0], tt.shape[0]))
+    x= np.arange (0, 1, 0.1)
+    t = np.arange (0, 1, 0.1)
+    xx, tt = np.meshgrid(x, t)
+    yy = np.zeros((xx.shape[0], xx.shape[1]))
     for i in range(xx.shape[0]):
-        for j in range(tt.shape[0]):
-            yy[i][j] = y_res([xx[i],tt[j]], u_)
+        for j in range(xx.shape[1]):
+            yy[i][j] = y_res([xx[i][j],tt[j][j]], u_)
     
-            print(yy[i,j], '  ', fn.y([xx[i],tt[j]]))
+            print(yy[i,j], '  ', fn.y([xx[i][j],tt[j][j]]), "ошибка: ", abs(yy[i,j]- fn.y([xx[i,j], tt[i,j]])))
+
+    ## сравнение нулевых наблюдений
+
+    print("сравнение нулевых наблюдений")
+    for i in range(cn.R_0):
+        print(y_res(cn.s_0[i], u_), '  ', fn.y(cn.s_0[i]), "ошибка: ", abs(y_res(cn.s_0[i], u_) - fn.y(cn.s_0[i])))
+
+    ## сравнение краевых наблюдений
+
+
+    print("сравнение краевых наблюдений")
+    for i in range(cn.R_g):
+        print(y_res(cn.s_g[i], u_), '  ', fn.y(cn.s_g[i]), "ошибка: ", abs(y_res(cn.s_g[i], u_) - fn.y(cn.s_g[i])))
 
     axes.plot_surface(xx,tt,yy, label = "y(s)")
     axes.set_xlabel("x")                              # подпись у горизонтальной оси х

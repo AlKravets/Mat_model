@@ -80,18 +80,24 @@ def create_slar():
     
     A = np.append(A_1, A_2, axis= 0)
 
-    A_plus = np.dot(np.transpose(A), np.linalg.inv(np.dot(A,np.transpose(A))))
+    P_1 = np.dot(A,np.transpose(A))
+
+    # A_plus = np.dot(np.transpose(A), np.linalg.inv(np.dot(A,np.transpose(A))))
+
+    A_plus = np.dot( np.transpose(A) , np.linalg.inv(P_1) )
 
     u_ = np.dot(A_plus, Y_)
 
-    return u_
+
+    eps = np.dot(Y_, Y_) - np.dot( Y_,  np.dot( P_1, np.dot( np.linalg.inv(P_1), Y_ ) ) )
+    return u_, eps
     
 def y_res(s,u_):
     return y_model(s,cn.u,cn.s_m) + y_model(s,u_[:cn.M_0],cn.s_m_0) + y_model(s,u_[cn.M_0:],cn.s_m_g)
 
 
 def show_res():
-    u_ = create_slar()
+    u_,eps = create_slar()
     fig2 = pylab.figure()
     axes = Axes3D(fig2)
 
@@ -126,6 +132,12 @@ def show_res():
     for i in range(cn.R_g):
         print(y_res(cn.s_g[i], u_), '  ', fn.y(cn.s_g[i]), "ошибка: ", abs(y_res(cn.s_g[i], u_) - fn.y(cn.s_g[i])))
 
+
+    ## выводим ошибку
+
+    print('Ошибка: {0:}'.format(eps)) 
+
+
     axes.plot_surface(xx,tt,yy, label = "y(s)")
     axes.set_xlabel("x")                              # подпись у горизонтальной оси х
     axes.set_ylabel("t")
@@ -136,7 +148,7 @@ def show_res():
 
 
 if __name__ == '__main__':
-    cn.test_observations()
+    cn.test_observations_new()
     #print(cn.s_0)
     show_constant()
     show_test_y()

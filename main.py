@@ -145,7 +145,22 @@ def show_res():
 
     pylab.show()
     fig2.savefig('1_2.png')
+    save_result(u_, eps)
 
+
+def save_result(u_, eps):
+    result_file = open("Result.txt", "w",encoding='UTF-8')
+    result_file.write("Знайдена похибка {0:}\n\n".format(eps))
+
+    result_file.write("Порівняння початкових спостережень:\n")
+    for i in range(cn.R_0):
+        result_file.write("Похибка в {0:}-ому значенні: {1:}\n".format(i, abs(y_res(cn.s_0[i], u_) - fn.y(cn.s_0[i])) ))
+
+    result_file.write("Порівняння крайових спостережень:\n")
+    for i in range(cn.R_0):
+        result_file.write("Похибка в {0:}-ому значенні: {1:}\n".format(i, abs(y_res(cn.s_g[i], u_) - fn.y(cn.s_g[i])) ))
+
+    result_file.close()
 
 if __name__ == '__main__':
     cn.test_observations_new()
@@ -154,3 +169,4 @@ if __name__ == '__main__':
     show_test_y()
     u_ = create_slar()
     show_res()
+

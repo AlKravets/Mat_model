@@ -61,7 +61,7 @@ def test_observations_new():
     for i in range(N):
         scope[i] = [0,1]
     
-    R_0 = 10
+    R_0 = 5
     
     s_0 = np.zeros((R_0, S))
     Y_0 = np.zeros(R_0)
@@ -73,7 +73,7 @@ def test_observations_new():
         Y_0[i] = fn.y(s_0[i])
 
     
-    R_g = 10
+    R_g = 5
     
     s_g = np.zeros((R_g, S))
     Y_g = np.zeros(R_g)

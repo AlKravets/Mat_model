@@ -73,14 +73,15 @@ def test_observations_new():
         Y_0[i] = fn.y(s_0[i])
 
     
-    R_g = 5
+    R_g = 6
     
     s_g = np.zeros((R_g, S))
     Y_g = np.zeros(R_g)
     
+    s_g = np.array([[1.,0.2], [0.,.2], [1.,.4], [0.,.4], [1.,.8], [0.,.8]])
 
-    for i in range(R_g):
-        s_g[i] = [i%2, (i+1)/R_g]
+    # for i in range(R_g):
+    #     s_g[i] = [i%2, (i+1)/R_g]
 
     for i in range(R_g):
         Y_g[i] = fn.y(s_g[i])
